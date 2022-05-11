@@ -66,3 +66,10 @@ ComfyJS.onSub = (user, message, subTierInfo, extra) => {
     sendPost(lastBodyColor);
   }, 10000);
 }
+
+ComfyJS.onRaid = (user, viewers, extra) => {
+  sendPost(rainbowBody);
+  setTimeout(function() {
+    sendPost(lastBodyColor);
+  }, 5000);
+}
