@@ -1,49 +1,68 @@
-ComfyJS.onReward = (user, reward, cost, message, extra) => {
-  if (reward === "Squid color") {
-    switch (message) {
-      case "red":
-        sendPost(redBody);
-        break;
-      case "blue":
-        sendPost(blueBody);
-        break;
-      case "green":
-        sendPost(greenBody);
-        break;
-      case "yellow":
-        sendPost(yellowBody);
-        break;
-      case "orange":
-        sendPost(orangeBody);
-        break;
-      case "magenta":
-        sendPost(magentaBody);
-        break;
-      case "off":
-        sendPost(blackBody);
-        break;
-      case "cyan":
-        sendPost(cyanBody);
-        break;
-    }
-  }
-}
+var lastBodyColor = blackBody;
+var colorChoice;
 
 ComfyJS.onReward = (user, reward, cost, message, extra) => {
   if (reward === "Squid eyes color") {
     switch (message) {
       case "white":
-        sendPost(whiteEyes);
+        colorChoice = whiteEyes;
         break;
       case "green":
-        sendPost(greenEyes);
+        colorChoice = greenEyes;
         break;
       case "off":
-        sendPost(blackEyes);
+        colorChoice = blackEyes;
         break;
       case "red":
-        sendPost(redEyes);
+        colorChoice = redEyes;
         break;
     }
+    sendPost(colorChoice);
   }
+  if (reward === "Squid color") {
+    switch (message) {
+      case "red":
+        colorChoice = redBody;
+        break;
+      case "blue":
+        colorChoice = blueBody;
+        break;
+      case "green":
+        colorChoice = greenBody;
+        break;
+      case "yellow":
+        colorChoice = yellowBody;
+        break;
+      case "orange":
+        colorChoice = orangeBody;
+        break;
+      case "magenta":
+        colorChoice = magentaBody;
+        break;
+      case "off":
+        colorChoice = blackBody;
+        break;
+      case "cyan":
+        colorChoice = cyanBody;
+        break;
+    }
+    sendPost(colorChoice);
+    lastBodyColor = colorChoice;
+  }
+}
+
+ComfyJS.onChat = (user, message, flags, self, extra) => {
+  if (message === "test") {
+    sendPost(rainbowBody);
+    setTimeout(function() {
+      sendPost(lastBodyColor);
+    }, 5000);
+  }
+}
+
+ComfyJS.onSub = (user, message, subTierInfo, extra) => {
+  sendPost(rainbowBody);
+  setTimeout(function() {
+    sendPost(lastBodyColor);
+  }, 10000);
 }
