@@ -11,13 +11,22 @@
 <body>
   <script type="text/javascript">
 
-    ComfyJS.onCommand = ( user, command, message, flags, extra ) => {
-      if(command === "test" ) {
-        console.log( "!test was typed in chat" );
-      }
-    }
     ComfyJS.Init( "riekelt" );
 
+function sendPost(input) {
+  let url = "http://192.168.2.31/json/state";
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url);
+
+  xhr.setRequestHeader("Accept", "application/json");
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  xhr.onload = () => console.log(xhr.responseText);
+
+  let data = input;
+
+  xhr.send(data);
+}
   </script>
 </body>
 
