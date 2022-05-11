@@ -6,7 +6,9 @@ var yellowBody = "{\"seg\": [{\"fx\": 0, \"col\": [[255, 200, 0]]}]}";
 var orangeBody = "{\"seg\": [{\"fx\": 0, \"col\": [[255, 160, 0]]}]}";
 var redBody = "{\"seg\": [{\"fx\": 0, \"col\": [[255, 0, 0]]}]}";
 var magentaBody = "{\"seg\": [{\"fx\": 0, \"col\": [[255, 0, 255]]}]}";
+var blackBody = "{\"seg\": [{\"fx\": 0, \"col\": [[0, 0, 0]]}]}";
 
 var redEyes = "{\"seg\": [{},{\"col\": [[255, 0, 0]]}]}";
 var whiteEyes = "{\"seg\": [{},{\"col\": [[255, 255, 255]]}]}";
 var greenEyes = "{\"seg\": [{},{\"col\": [[255, 255, 0]]}]}";
+var blackEyes = "{\"seg\": [{},{\"col\": [[0, 0, 0]]}]}";
