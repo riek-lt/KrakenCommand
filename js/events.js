@@ -1,4 +1,6 @@
 var lastBodyColor = blackBody;
+var lastEyesColor = blackEyes;
+
 var colorChoice;
 
 ComfyJS.onReward = (user, reward, cost, message, extra) => {
@@ -18,6 +20,7 @@ ComfyJS.onReward = (user, reward, cost, message, extra) => {
         break;
     }
     sendPost(colorChoice);
+    lastEyesColor = colorChoice;
   }
   if (reward === "Squid color") {
     switch (message) {
@@ -52,23 +55,32 @@ ComfyJS.onReward = (user, reward, cost, message, extra) => {
 }
 
 ComfyJS.onChat = (user, message, flags, self, extra) => {
-  if (message === "test") {
-    sendPost(rainbowBody);
-    setTimeout(function() {
-      sendPost(lastBodyColor);
-    }, 5000);
+  if (user === "Riekelt") {
+    if (message === "test") {
+      console.log('done');
+      sendPost(partyMode);
+      setTimeout(function() {
+        sendPost(lastBodyColor);
+        sendPost(lastEyesColor);
+      }, 5000);
+    } else if (message === "full red") {
+      sendPost(redBody);
+      sendPost(redEyes);
+    }
+  } else {
+    console.log("no can do");
   }
 }
 
 ComfyJS.onSub = (user, message, subTierInfo, extra) => {
-  sendPost(rainbowBody);
+  sendPost(partyMode);
   setTimeout(function() {
     sendPost(lastBodyColor);
   }, 10000);
 }
 
 ComfyJS.onRaid = (user, viewers, extra) => {
-  sendPost(rainbowBody);
+  sendPost(partyMode);
   setTimeout(function() {
     sendPost(lastBodyColor);
   }, 5000);
