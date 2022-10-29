@@ -1,5 +1,6 @@
-var lastBodyColor = blackBody;
-var lastEyesColor = blackEyes;
+
+var lastBodyColor = localStorage.getItem('body')
+var lastEyesColor = localStorage.getItem('eyes');
 
 var colorChoice;
 
@@ -19,7 +20,7 @@ ComfyJS.onReward = (user, reward, cost, message, extra) => {
         colorChoice = redEyes;
         break;
     }
-    sendPost(colorChoice);
+    sendPost(colorChoice, 'eyes');
     lastEyesColor = colorChoice;
   }
   if (reward === "Squid color") {
@@ -49,7 +50,7 @@ ComfyJS.onReward = (user, reward, cost, message, extra) => {
         colorChoice = cyanBody;
         break;
     }
-    sendPost(colorChoice);
+    sendPost(colorChoice, 'body');
     lastBodyColor = colorChoice;
   }
 }
@@ -58,14 +59,14 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
   if (user === "Riekelt") {
     if (message === "test") {
       console.log('done');
-      sendPost(partyMode);
+      sendPost(partyMode, 'none');
       setTimeout(function() {
-        sendPost(lastBodyColor);
-        sendPost(lastEyesColor);
+        sendPost(lastBodyColor, 'body');
+        sendPost(lastEyesColor, 'eyes');
       }, 5000);
     } else if (message === "full red") {
-      sendPost(redBody);
-      sendPost(redEyes);
+      sendPost(redBody, 'body');
+      sendPost(redEyes, 'eyes');
     }
   } else {
     console.log("no can do");
@@ -73,15 +74,19 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
 }
 
 ComfyJS.onSub = (user, message, subTierInfo, extra) => {
-  sendPost(partyMode);
+  console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
+  sendPost(partyMode, 'none');
   setTimeout(function() {
-    sendPost(lastBodyColor);
+    sendPost(lastBodyColor, 'body');
+    sendPost(lastEyesColor, 'eyes');
+
   }, 10000);
 }
 
 ComfyJS.onRaid = (user, viewers, extra) => {
-  sendPost(partyMode);
+  sendPost(partyMode, 'none');
   setTimeout(function() {
-    sendPost(lastBodyColor);
-  }, 5000);
+    sendPost(lastBodyColor, 'body');
+    sendPost(lastEyesColor, 'eyes');
+  }, 10000);
 }

@@ -16,7 +16,7 @@
   <script type="text/javascript">
     ComfyJS.Init("riekelt", "oauth:" + oAuth);
 
-    function sendPost(input) {
+    function sendPost(input, segment) {
       let url = "http://192.168.2.31/json/state";
       let xhr = new XMLHttpRequest();
       xhr.open("POST", url);
@@ -27,9 +27,11 @@
       xhr.onload = () => console.log(xhr.responseText);
 
       let data = input;
+      localStorage.setItem(segment, data)
 
       xhr.send(data);
     }
+
   </script>
 </body>
 
