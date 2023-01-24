@@ -19,6 +19,9 @@ ComfyJS.onReward = (user, reward, cost, message, extra) => {
       case "red":
         colorChoice = redEyes;
         break;
+	  case "magenta":
+        colorChoice = magentaEyes;
+        break;
     }
     sendPost(colorChoice, 'eyes');
     lastEyesColor = colorChoice;
@@ -57,7 +60,7 @@ ComfyJS.onReward = (user, reward, cost, message, extra) => {
 
 ComfyJS.onChat = (user, message, flags, self, extra) => {
   if (user === "Riekelt") {
-    if (message === "test") {
+    if (message === "party mode") {
       console.log('done');
       sendPost(partyMode, 'none');
       setTimeout(function() {
