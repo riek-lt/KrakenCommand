@@ -37,6 +37,9 @@ ComfyJS.onReward = (user, reward, cost, message, extra) => {
       case "green":
         colorChoice = greenBody;
         break;
+	  case "white":
+	    colorChoice = whiteBody;
+		break;
       case "yellow":
         colorChoice = yellowBody;
         break;
