@@ -12,7 +12,7 @@ var colorChoice;
 const eyesJSON = "colors/eyes.txt";
 const bodyJSON = "colors/body.txt";
 
-var prevTime;
+var prevTime = "-0.00";
 var lastBodyColor = readData(bodyJSON);
 var lastEyesColor = readData(eyesJSON);
 
@@ -110,7 +110,7 @@ function sendPost(input, segment) {
                     writeText(eyesJSON, input);
                     break;
                 default:
-                    console.log('no write');
+
                     break;
             }
         }
