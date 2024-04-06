@@ -12,10 +12,9 @@ var colorChoice;
 const eyesJSON = "colors/eyes.txt";
 const bodyJSON = "colors/body.txt";
 
+var prevTime;
 var lastBodyColor = readData(bodyJSON);
 var lastEyesColor = readData(eyesJSON);
-console.log(lastBodyColor);
-var prevTime;
 
 
 
@@ -67,13 +66,10 @@ var prevTime;
                         // Update previous split name
                         previousSplitName = currentSplitName;
 
-                        //TODO: Distinguish between red and green
                         const info = await client.getDelta();
                         livesplitSignaler(paceChecker(info, prevTime));
 
                         prevTime = info;
-
-                        //sendPost(colors.greenBody, "none");
                         console.log('---------------------------------------------------------');
                     } else {
                         prevTime = "-0.00"
@@ -113,9 +109,9 @@ function sendPost(input, segment) {
                 case "eyes":
                     writeText(eyesJSON, input);
                     break;
-					default:
-					console.log('no write');
-					break;
+                default:
+                    console.log('no write');
+                    break;
             }
         }
     });
@@ -190,8 +186,7 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
             sendPost(colors.redBody, 'body');
             sendPost(colors.redEyes, 'eyes');
         }
-    } else {
-    }
+    } else {}
 }
 
 function livesplitSignaler(signal) {
@@ -202,28 +197,17 @@ function livesplitSignaler(signal) {
     }
     setTimeout(function() {
         sendPost(lastBodyColor, 'body');
-    //    sendPost(lastEyesColor, 'eyes');
+        //    sendPost(lastEyesColor, 'eyes');
     }, 3000);
 }
 
-
-//function readData(filePath) {
-//    fs.readFile(filePath, 'utf8', (err, data) => {
-//        if (err) {
-//            console.error('Error reading file:', err);
-//        } 
-//		return data;
-//    });
-//}
-
 function readData(filePath) {
-	try {
-  const data = fs.readFileSync(filePath, 'utf8');
-  console.log(data);
-  return data;
-} catch (err) {
-  console.error(err);
-}
+    try {
+        const data = fs.readFileSync(filePath, 'utf8');
+        return data;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 function writeText(dest, content) {
@@ -241,25 +225,25 @@ function paceChecker(currentTime, prevTime) {
 
     if ((currentTime !== undefined) || (prevTime !== undefined)) {
         if ((plusMinusCurrent == '+') && (plusMinusPrev == "−")) {
-					console.log("I DID A 1 red");
+            console.log("I DID A 1 red");
             return "red";
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "−")) {
             if (currentSeconds - prevSeconds > 0) {
-							console.log("I DID A 2 green");
+                console.log("I DID A 2 green");
                 return "green";
             } else {
-							console.log("I DID A 3 red");
+                console.log("I DID A 3 red");
                 return "red";
             }
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "+")) {
-						console.log("I DID A 4 green");
+            console.log("I DID A 4 green");
             return "green";
         } else if ((plusMinusCurrent == '+') && (plusMinusPrev == "+")) {
             if (currentSeconds - prevSeconds > 0) {
-							console.log("I DID A 5 red");
+                console.log("I DID A 5 red");
                 return "red";
             } else {
-							console.log("I DID A 6 green");
+                console.log("I DID A 6 green");
                 return "green";
             }
         }
