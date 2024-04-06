@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "livesplit-client": "^1.0.3",
+    "request": "^2.88.2",
+    "ws": "^8.16.0"
+  }
+}
