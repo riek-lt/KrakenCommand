@@ -209,9 +209,9 @@ ComfyJS.onRaid = (user, viewers, extra) => {
 
 function livesplitSignaler(signal) {
     if (signal == "red") {
-        sendPost(colors.redBody, "none")
+        sendPost(colors.liveRed, "none")
     } else if (signal == "green") {
-        sendPost(colors.greenBody, "none")
+        sendPost(colors.liveGreen, "none")
     }
     setTimeout(function() {
         sendPost(lastBodyColor, 'body');
