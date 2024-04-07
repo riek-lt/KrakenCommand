@@ -189,6 +189,24 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
     } else {}
 }
 
+ComfyJS.onSub = (user, message, subTierInfo, extra) => {
+  console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
+  sendPost(partyMode, 'none');
+  setTimeout(function() {
+    sendPost(lastBodyColor, 'body');
+    sendPost(lastEyesColor, 'eyes');
+
+  }, 10000);
+}
+
+ComfyJS.onRaid = (user, viewers, extra) => {
+  sendPost(partyMode, 'none');
+  setTimeout(function() {
+    sendPost(lastBodyColor, 'body');
+    sendPost(lastEyesColor, 'eyes');
+  }, 10000);
+}
+
 function livesplitSignaler(signal) {
     if (signal == "red") {
         sendPost(colors.redBody, "none")
