@@ -191,7 +191,7 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
 
 ComfyJS.onSub = (user, message, subTierInfo, extra) => {
   console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
-  sendPost(partyMode, 'none');
+  sendPost(colors.partyMode, 'none');
   setTimeout(function() {
     sendPost(lastBodyColor, 'body');
     sendPost(lastEyesColor, 'eyes');
@@ -200,7 +200,7 @@ ComfyJS.onSub = (user, message, subTierInfo, extra) => {
 }
 
 ComfyJS.onRaid = (user, viewers, extra) => {
-  sendPost(partyMode, 'none');
+  sendPost(colors.partyMode, 'none');
   setTimeout(function() {
     sendPost(lastBodyColor, 'body');
     sendPost(lastEyesColor, 'eyes');
