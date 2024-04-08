@@ -16,6 +16,8 @@ var prevTime = "-0.00";
 var lastBodyColor = readData(bodyJSON);
 var lastEyesColor = readData(eyesJSON);
 
+var prevBPT, currentBPT;
+var splitIndex = 0;
 
 
 (async () => {
@@ -65,8 +67,10 @@ var lastEyesColor = readData(eyesJSON);
                         console.log(`Split Name: ${currentSplitName}, Delta: ${delta}`);
                         // Update previous split name
                         previousSplitName = currentSplitName;
-
+						
                         const info = await client.getDelta();
+						splitIndex = await client.getSplitIndex();
+                        currentBPT = await client.getBestPossibleTime();
                         livesplitSignaler(paceChecker(info, prevTime));
 
                         prevTime = info;
@@ -190,28 +194,34 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
 }
 
 ComfyJS.onSub = (user, message, subTierInfo, extra) => {
-  console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
-  sendPost(colors.partyMode, 'none');
-  setTimeout(function() {
-    sendPost(lastBodyColor, 'body');
-    sendPost(lastEyesColor, 'eyes');
+    console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
+    sendPost(colors.partyMode, 'none');
+    setTimeout(function() {
+        sendPost(lastBodyColor, 'body');
+        sendPost(lastEyesColor, 'eyes');
 
-  }, 10000);
+    }, 10000);
 }
 
 ComfyJS.onRaid = (user, viewers, extra) => {
-  sendPost(colors.partyMode, 'none');
-  setTimeout(function() {
-    sendPost(lastBodyColor, 'body');
-    sendPost(lastEyesColor, 'eyes');
-  }, 10000);
+    sendPost(colors.partyMode, 'none');
+    setTimeout(function() {
+        sendPost(lastBodyColor, 'body');
+        sendPost(lastEyesColor, 'eyes');
+    }, 10000);
 }
 
 function livesplitSignaler(signal) {
-    if (signal == "red") {
-        sendPost(colors.liveRed, "none")
-    } else if (signal == "green") {
-        sendPost(colors.liveGreen, "none")
+    if (isGold()) {
+		if (splitIndex>0) {
+			sendPost(colors.liveGold, "none")
+		}
+    } else {
+        if (signal == "red") {
+            sendPost(colors.liveRed, "none")
+        } else if (signal == "green") {
+            sendPost(colors.liveGreen, "none")
+        }
     }
     setTimeout(function() {
         sendPost(lastBodyColor, 'body');
@@ -270,12 +280,16 @@ function paceChecker(currentTime, prevTime) {
     }
 }
 
-function timeParser(time) {
+function timeParser(time) { //add hrs
     if ((time.includes('+')) || (time.includes('−'))) {
         var seconds = parseFloat('0.0');
         time = time.substring(1)
         if (time.includes(":")) {
             var minuteGetter = time.split(":");
+            if (minuteGetter.length == 3) {
+                seconds += parseFloat(minuteGetter[0]) * 60 * 60;
+                minuteGetter = minuteGetter.slice(1);
+            }
             time = minuteGetter[1]
             seconds += parseFloat(minuteGetter[0]) * 60;
         }
@@ -288,5 +302,17 @@ function getPlusMinus(time) {
     if ((time.includes('−')) || (time.includes('+'))) {
         const plusminus = time.charAt(0);
         return plusminus
+    }
+}
+
+function isGold() {
+    if (timeParser("+" + currentBPT) < timeParser("+" + prevBPT)) {
+        prevBPT = currentBPT;
+        console.log("IS GOLD HAHA");
+        return true;
+    } else {
+        prevBPT = currentBPT;
+        console.log("NO GOLD HAHA");
+        return false;
     }
 }
