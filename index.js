@@ -82,7 +82,7 @@ var splitIndex = 0;
             } catch (error) {
                 console.error('Livesplit block Error:', error);
             }
-        }, 5000);
+        }, 1000);
 
         await client.getDelta();
 
@@ -226,7 +226,7 @@ function livesplitSignaler(signal) {
     setTimeout(function() {
         sendPost(lastBodyColor, 'body');
         //    sendPost(lastEyesColor, 'eyes');
-    }, 3000);
+    }, 5000);
 }
 
 function readData(filePath) {
