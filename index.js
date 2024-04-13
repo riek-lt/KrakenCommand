@@ -253,7 +253,7 @@ function paceChecker(currentTime, prevTime) {
 
     if ((currentTime !== undefined) || (prevTime !== undefined)) {
         if ((plusMinusCurrent == '+') && (plusMinusPrev == "−")) {
-            console.log("I DID A 1 red");
+            console.log("I DID A 1 red (ez)");
             return "red";
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "−")) {
             if (currentSeconds - prevSeconds > 0) {
@@ -264,7 +264,7 @@ function paceChecker(currentTime, prevTime) {
                 return "red";
             }
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "+")) {
-            console.log("I DID A 4 green");
+            console.log("I DID A 4 green (ez)");
             return "green";
         } else if ((plusMinusCurrent == '+') && (plusMinusPrev == "+")) {
             if (currentSeconds - prevSeconds > 0) {
@@ -308,11 +308,9 @@ function getPlusMinus(time) {
 function isGold() {
     if (timeParser("+" + currentBPT) < timeParser("+" + prevBPT)) {
         prevBPT = currentBPT;
-        console.log("IS GOLD HAHA");
         return true;
     } else {
         prevBPT = currentBPT;
-        console.log("NO GOLD HAHA");
         return false;
     }
 }
