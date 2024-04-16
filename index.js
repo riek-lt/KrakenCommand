@@ -276,28 +276,28 @@ function paceChecker(currentTime, prevTime) {
     if ((currentTime !== undefined) || (prevTime !== undefined)) {
 		//If went from - to +, this 100% means I lost time
         if ((plusMinusCurrent == '+') && (plusMinusPrev == "−")) {
-            console.log("I DID A 1 red (ez)");
+            console.info("I DID A 1 red (ez)");
             return "red";
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "−")) {
 			//If I stayed on - on both times, I can easily subtract current from prev. If positive, I gained time
 			//Likewise, if negative, it means I lost time. 
             if (currentSeconds - prevSeconds > 0) {
-                console.log("I DID A 2 green");
+                console.info("I DID A 2 green");
                 return "green";
             } else {
-                console.log("I DID A 3 red");
+                console.info("I DID A 3 red");
                 return "red";
             }
 			//Opposite logic from up here.
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "+")) {
-            console.log("I DID A 4 green (ez)");
+            console.info("I DID A 4 green (ez)");
             return "green";
         } else if ((plusMinusCurrent == '+') && (plusMinusPrev == "+")) {
             if (currentSeconds - prevSeconds > 0) {
-                console.log("I DID A 5 red");
+                console.info("I DID A 5 red");
                 return "red";
             } else {
-                console.log("I DID A 6 green");
+                console.info("I DID A 6 green");
                 return "green";
             }
         }
@@ -345,6 +345,7 @@ function getPlusMinus(time) {
 function isGold() {
     if (timeParser("+" + currentBPT) < timeParser("+" + prevBPT)) {
         prevBPT = currentBPT;
+		console.info("We golded!");
         return true;
     } else {
 		//This is for initialisation?
