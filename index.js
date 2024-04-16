@@ -66,7 +66,7 @@ var splitIndex = 0;
                     if (currentTimerPhase == "Running") {
                         // Display split name and delta
                         const delta = await client.getDelta();
-                        console.log(`Split Name: ${currentSplitName}, Delta: ${delta}`);
+                        console.info(`Split Name: ${currentSplitName}, Delta: ${delta}`);
                         // Update previous split name
                         previousSplitName = currentSplitName;
 						
