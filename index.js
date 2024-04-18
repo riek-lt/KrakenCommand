@@ -241,7 +241,8 @@ function livesplitSignaler(signal) {
     }
     setTimeout(function() {
 		//After 5 seconds, return body. Since livesquid only affects the body, only this needs to be reset.
-        sendPost(lastBodyColor, 'body');
+        sendPost(lastBodyColor, 'none');
+		sendPost(lastEyesColor, 'none');
     }, 5000);
 }
 
