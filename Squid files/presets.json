@@ -1,0 +1,535 @@
+{
+  "0": {},
+  "1": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 110,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false,
+        "n": "Squid Colour"
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false,
+        "n": "Eyes"
+      }
+    ],
+    "n": "1. Rainbow Flow"
+  },
+  "2": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 65,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ],
+    "n": "2. Rainbow Palette"
+  },
+  "3": {
+    "n": "3. Rainbow Loop",
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 8,
+        "sx": 0,
+        "ix": 255,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ]
+  },
+  "4": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [0, 0, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ],
+    "n": "4. Solid Blue"
+  },
+  "5": {
+    "n": "5. Solid Cyan",
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "bri": 255,
+        "cct": 127,
+        "col": [
+          [0, 255, 200],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "bri": 255,
+        "cct": 127,
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ]
+  },
+  "6": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [8, 255, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ],
+    "n": "6. Solid Green"
+  },
+  "7": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [255, 200, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ],
+    "n": "7. Solid Yellow"
+  },
+  "8": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [255, 160, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ],
+    "n": "8. Solid Orange"
+  },
+  "9": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [255, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ],
+    "n": "9. Solid Red"
+  },
+  "10": {
+    "on": true,
+    "transition": 7,
+    "mainseg": 0,
+    "seg": [
+      {
+        "id": 0,
+        "start": 0,
+        "stop": 26,
+        "grp": 1,
+        "spc": 0,
+        "of": 4,
+        "on": true,
+        "cct": 127,
+        "n": "Squid Colour",
+        "col": [
+          [255, 0, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 11,
+        "sel": true,
+        "rev": false,
+        "mi": false
+      },
+      {
+        "id": 1,
+        "start": 26,
+        "stop": 34,
+        "grp": 1,
+        "spc": 0,
+        "of": 0,
+        "on": true,
+        "cct": 127,
+        "n": "Eyes",
+        "col": [
+          [255, 255, 255],
+          [0, 0, 0],
+          [0, 0, 0]
+        ],
+        "fx": 0,
+        "sx": 128,
+        "ix": 128,
+        "pal": 0,
+        "sel": false,
+        "rev": false,
+        "mi": false
+      }
+    ],
+    "n": "10. Solid Magenta"
+  }
+,"11":{"n":"Golden","on":true,"bri":128,"transition":7,"mainseg":0,"seg":[{"id":0,"start":0,"stop":26,"grp":1,"spc":0,"of":4,"on":true,"frz":false,"bri":255,"cct":127,"n":"Squid Colour","col":[[255,160,0],[0,0,0],[0,0,0]],"fx":18,"sx":255,"ix":255,"pal":2,"sel":true,"rev":false,"mi":false},{"id":1,"start":26,"stop":34,"grp":1,"spc":0,"of":0,"on":true,"frz":false,"bri":255,"cct":127,"n":"Eyes","col":[[255,255,255],[0,0,0],[0,0,0]],"fx":0,"sx":128,"ix":128,"pal":0,"sel":false,"rev":false,"mi":false},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0}]},"12":{"n":"Murder","on":true,"bri":128,"transition":7,"mainseg":0,"seg":[{"id":0,"start":0,"stop":26,"grp":1,"spc":0,"of":4,"on":true,"frz":false,"bri":255,"cct":127,"n":"Squid Colour","col":[[0,0,0],[0,0,0],[0,0,0]],"fx":0,"sx":128,"ix":128,"pal":8,"sel":true,"rev":false,"mi":false},{"id":1,"start":26,"stop":34,"grp":1,"spc":0,"of":0,"on":true,"frz":false,"bri":255,"cct":127,"n":"Eyes","col":[[255,0,0],[0,0,0],[0,0,0]],"fx":43,"sx":128,"ix":128,"pal":0,"sel":true,"rev":false,"mi":false},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0},{"stop":0}]} }

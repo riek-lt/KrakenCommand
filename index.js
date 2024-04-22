@@ -345,8 +345,8 @@ function getPlusMinus(time) {
 //If the Best Possible Time changed this split, I golded. 
 function isGold() {
     if (timeParser("+" + currentBPT) < timeParser("+" + prevBPT)) {
+		console.info("We golded with " + (timeParser("+" + prevBPT) - timeParser("+" + currentBPT)).toFixed(2) + "!");
         prevBPT = currentBPT;
-		console.info("We golded!");
         return true;
     } else {
 		//This is for initialisation?
