@@ -304,6 +304,7 @@ function paceChecker(currentTime, prevTime) {
         }
     } else {
         return "none";
+        console.log('one of the parameters was undefined. Probably prevTime ' + prevTime);
     }
 }
 
