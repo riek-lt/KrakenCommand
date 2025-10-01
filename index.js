@@ -1,6 +1,6 @@
 //pkg -t node*-win-x64 index.js --output livesquid
 //pkg index.js --output livesquid
-const LiveSplitClient = require('livesplit-client');
+const net = require('net');
 const request = require('request');
 const colors = require('./colors/colors');
 const fs = require('fs');
@@ -21,82 +21,74 @@ var lastEyesColor = readData(eyesJSON);
 
 var prevBPT, currentBPT;
 var splitIndex = 0;
+const HOST = '127.0.0.1'; // or the server IP
+const PORT = 16834;
 
 
-(async () => {
-    try {
-        // Initialize client with LiveSplit Server's IP:PORT
-        const client = new LiveSplitClient('127.0.0.1:16834');
+const client = net.createConnection({ host: HOST, port: PORT }, () => {
+    console.log(`Connected to ${HOST}:${PORT}`);
 
-        // Connected event
-        client.on('connected', () => {
-            console.log('Connected!');
+    // Connected event
+    client.on('connected', () => {
+        console.log('Connected!');
+    });
+
+    // Disconnected event
+    client.on('disconnected', () => {
+        console.log('Disconnected!');
+    });
+
+    // Error event
+    client.on('error', (err) => {
+        console.log(err);
+    });
+
+    // Some async sleep sugar for this example
+    const sleep = (time) => {
+        return new Promise((r) => {
+            setTimeout(() => r(), time);
         });
+    };
 
-        // Disconnected event
-        client.on('disconnected', () => {
-            console.log('Disconnected!');
-        });
+    let previousSplitName = '';
 
-        // Error event
-        client.on('error', (err) => {
-            console.log(err);
-        });
+    // Function to check split name every 1000ms
+    setInterval(async () => {
+        try {
+            // Get current split name and phase (running?)
+            const currentSplitName = await sendCommand('getcurrentsplitname');
+            const currentTimerPhase = await sendCommand('getcurrenttimerphase');
 
-        // Some async sleep sugar for this example
-        const sleep = (time) => {
-            return new Promise((r) => {
-                setTimeout(() => r(), time);
-            });
-        };
+            // Check if split name has changed
+            if (currentSplitName !== previousSplitName) {
+                //See if timer is running. If so do stuff.
+                if (currentTimerPhase == "Running") {
+                    // Display split name and delta
+                    const delta = await sendCommand('getdelta');
+                    console.info(`Split Name: ${currentSplitName}, Delta: ${delta}`);
+                    // Update previous split name
+                    previousSplitName = currentSplitName;
 
-        // Connect to the server, Promise will be resolved when the connection will be succesfully established
-        await client.connect();
+                    //Save Delta, split number and BPT for gold, then give signals to lamp.
+                    const info = await sendCommand('getdelta');
+                    splitIndex = await sendCommand('getsplitindex');
+                    currentBPT = await sendCommand('getbestpossibletime');
+                    livesplitSignaler(paceChecker(info, prevTime));
 
-        let previousSplitName = '';
-
-        // Function to check split name every 1000ms
-        setInterval(async () => {
-            try {
-                // Get current split name and phase (running?)
-                const currentSplitName = await client.getCurrentSplitName();
-                const currentTimerPhase = await client.getCurrentTimerPhase();
-                // Check if split name has changed
-                if (currentSplitName !== previousSplitName) {
-                    //See if timer is running. If so do stuff.
-                    if (currentTimerPhase == "Running") {
-                        // Display split name and delta
-                        const delta = await client.getDelta();
-                        console.info(`Split Name: ${currentSplitName}, Delta: ${delta}`);
-                        // Update previous split name
-                        previousSplitName = currentSplitName;
-						
-						//Save Delta, split number and BPT for gold, then give signals to lamp.
-                        const info = await client.getDelta();
-						splitIndex = await client.getSplitIndex();
-                        currentBPT = await client.getBestPossibleTime();
-                        livesplitSignaler(paceChecker(info, prevTime));
-						
-						//Save time for new comparison
-                        prevTime = info;
-                        console.log('---------------------------------------------------------');
-                    } else {
-						// If timer is not running, reset last time to 0.
-                        prevTime = "-0.00"
-                    }
+                    //Save time for new comparison
+                    prevTime = info;
+                    console.log('---------------------------------------------------------');
+                } else {
+                    // If timer is not running, reset last time to 0.
+                    prevTime = "-0.00"
                 }
-            } catch (error) {
-                console.error('Livesplit block Error:', error);
             }
-        }, 1000);
+        } catch (error) {
+            console.error('Livesplit block Error:', error);
+        }
+    }, 2000);
 
-        await client.getDelta();	//This probably could get deleted.
-
-
-    } catch (err) {
-        console.error("end of interval: " + err); // Something went wrong
-    }
-})();
+});
 
 //Function for sending the API calls to the squid.
 function sendPost(input, segment) {
@@ -114,7 +106,7 @@ function sendPost(input, segment) {
             console.error('Sendpost not 200 Error:', body);
         } else {
             switch (segment) {
-				//If second arg is body or eyes, save that string to files to remember what was last.
+                //If second arg is body or eyes, save that string to files to remember what was last.
                 case "body":
                     writeText(bodyJSON, input);
                     break;
@@ -226,13 +218,13 @@ function sendPost(input, segment) {
 
 //This function gets the colour the squid needs to be, and sends this as an API request.
 function livesplitSignaler(signal) {
-	//Triggers if BPT dropped, this means I golded. This is more important to check.
-	//Could probably be nested around the green signal instead of here.
+    //Triggers if BPT dropped, this means I golded. This is more important to check.
+    //Could probably be nested around the green signal instead of here.
     if (isGold()) {
-		//Unsure why this check is here.
-		if (splitIndex>0) {
-			sendPost(colors.liveGold, "none")
-		}
+        //Unsure why this check is here.
+        if (splitIndex > 0) {
+            sendPost(colors.liveGold, "none")
+        }
     } else {
         if (signal == "red") {
             sendPost(colors.liveRed, "none")
@@ -240,10 +232,10 @@ function livesplitSignaler(signal) {
             sendPost(colors.liveGreen, "none")
         }
     }
-    setTimeout(function() {
-		//After 5 seconds, return body. Since livesquid only affects the body, only this needs to be reset.
+    setTimeout(function () {
+        //After 5 seconds, return body. Since livesquid only affects the body, only this needs to be reset.
         sendPost(lastBodyColor, 'none');
-		sendPost(lastEyesColor, 'none');
+        sendPost(lastEyesColor, 'none');
     }, 5000);
 }
 
@@ -266,23 +258,26 @@ function writeText(dest, content) {
 
 //This gets 2 livesplit values (ie "+2:55:21.22)" and compares the difference.
 function paceChecker(currentTime, prevTime) {
-	//Convert the string to seconds as a float (142.65 for 2:22.65)
+    //Convert the string to seconds as a float (142.65 for 2:22.65)
     const currentSeconds = timeParser(currentTime);
     const prevSeconds = timeParser(String(prevTime));
-	//Saves the +/- if I'm behind or not. Needed for comparison.
+    //Saves the +/- if I'm behind or not. Needed for comparison.
     const plusMinusCurrent = getPlusMinus(currentTime);
     const plusMinusPrev = getPlusMinus(prevTime);
+    console.log("typeof " + typeof currentSeconds);
+    console.log('DINGES ' + currentTime);
 
-//The next part compares the 2 times and judges whether I lost or gained time and returns green or red.
-//Only works if both aren't undefined. Doesn't work for the first split, need to look into that.
+    //The next part compares the 2 times and judges whether I lost or gained time and returns green or red.
+    //Only works if both aren't undefined. Doesn't work for the first split, need to look into that.
     if ((currentTime !== undefined) || (prevTime !== undefined)) {
-		//If went from - to +, this 100% means I lost time
+        console.log("curr = " + currentTime + "& prev =  " + prevTime)
+        //If went from - to +, this 100% means I lost time
         if ((plusMinusCurrent == '+') && (plusMinusPrev == "−")) {
             console.info("I DID A 1 red (ez)");
             return "red";
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "−")) {
-			//If I stayed on - on both times, I can easily subtract current from prev. If positive, I gained time
-			//Likewise, if negative, it means I lost time. 
+            //If I stayed on - on both times, I can easily subtract current from prev. If positive, I gained time
+            //Likewise, if negative, it means I lost time. 
             if (currentSeconds - prevSeconds > 0) {
                 console.info("I DID A 2 green");
                 return "green";
@@ -290,7 +285,7 @@ function paceChecker(currentTime, prevTime) {
                 console.info("I DID A 3 red");
                 return "red";
             }
-			//Opposite logic from up here.
+            //Opposite logic from up here.
         } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "+")) {
             console.info("I DID A 4 green (ez)");
             return "green";
@@ -310,27 +305,27 @@ function paceChecker(currentTime, prevTime) {
 }
 
 //This function accepts a time format "+2:22:22.22" or "-11:11.11" and returns this in seconds (float) (671.11)
-function timeParser(time) { 
-	//Only works if string has a + or -. Makes things easier
+function timeParser(time) {
+    //Only works if string has a + or -. Makes things easier
     if ((time.includes('+')) || (time.includes('−'))) {
         var seconds = parseFloat('0.0');
-		//Get rid of plus or minus for calcs
+        //Get rid of plus or minus for calcs
         time = time.substring(1)
-		//If string has :, it at least has minutes added to it!
+        //If string has :, it at least has minutes added to it!
         if (time.includes(":")) {
-			//Make array split by hours (opt), minutes and (milli)seconds.
+            //Make array split by hours (opt), minutes and (milli)seconds.
             var minuteGetter = time.split(":");
-			//If this is true, we got hours in the string.
+            //If this is true, we got hours in the string.
             if (minuteGetter.length == 3) {
-				//Add hours in seconds, then get rid of index 0 so it's minutes and seconds left.
+                //Add hours in seconds, then get rid of index 0 so it's minutes and seconds left.
                 seconds += parseFloat(minuteGetter[0]) * 60 * 60;
                 minuteGetter = minuteGetter.slice(1);
             }
-			//Make time just seconds, then add minutes to seconds counter
+            //Make time just seconds, then add minutes to seconds counter
             time = minuteGetter[1]
             seconds += parseFloat(minuteGetter[0]) * 60;
         }
-		//Add seconds to total and return. Conversion might not be needed anymore.
+        //Add seconds to total and return. Conversion might not be needed anymore.
         seconds += parseFloat(time);
         return seconds;
     }
@@ -347,12 +342,35 @@ function getPlusMinus(time) {
 //If the Best Possible Time changed this split, I golded. 
 function isGold() {
     if (timeParser("+" + currentBPT) < timeParser("+" + prevBPT)) {
-		console.info("We golded with " + (timeParser("+" + prevBPT) - timeParser("+" + currentBPT)).toFixed(2) + "!");
+        console.info("We golded with " + (timeParser("+" + prevBPT) - timeParser("+" + currentBPT)).toFixed(2) + "!");
         prevBPT = currentBPT;
         return true;
     } else {
-		//This is for initialisation?
+        //This is for initialisation?
         prevBPT = currentBPT;
         return false;
     }
 }
+let pendingResolver = null;
+
+function sendCommand(cmd) {
+    return new Promise((resolve, reject) => {
+        if (pendingResolver) {
+            return reject(new Error('Another command is still pending!'));
+        }
+        pendingResolver = resolve;
+        client.write(cmd + '\n');
+    });
+}
+
+
+client.on('data', (data) => {
+    const response = data.toString().trim();
+
+    if (pendingResolver) {
+        pendingResolver(response);
+        pendingResolver = null;
+    } else {
+        console.log('Server says (unsolicited):', response);
+    }
+});
