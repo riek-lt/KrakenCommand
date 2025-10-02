@@ -1,5 +1,7 @@
 //pkg -t node*-win-x64 index.js --output livesquid
 //pkg index.js --output livesquid
+//Use the top one for .exe creation
+
 const net = require('net');
 const request = require('request');
 const colors = require('./colors/colors');
@@ -12,6 +14,9 @@ ComfyJS.Init('riekelt', process.env.OAUTH);
 
 var colorChoice;
 var prevTime = "-0.00";
+var prevBPT, currentBPT;
+var splitIndex = 0;
+
 
 //Load last colour into memory
 const eyesJSON = "colors/eyes.txt";
@@ -19,8 +24,7 @@ const bodyJSON = "colors/body.txt";
 var lastBodyColor = readData(bodyJSON);
 var lastEyesColor = readData(eyesJSON);
 
-var prevBPT, currentBPT;
-var splitIndex = 0;
+//Livesplit TCP server
 const HOST = '127.0.0.1'; // or the server IP
 const PORT = 16834;
 
@@ -43,7 +47,7 @@ const client = net.createConnection({ host: HOST, port: PORT }, () => {
         console.log(err);
     });
 
-    // Some async sleep sugar for this example
+    // Some async sleep sugar for this example. Does this get used even?
     const sleep = (time) => {
         return new Promise((r) => {
             setTimeout(() => r(), time);
@@ -71,13 +75,13 @@ const client = net.createConnection({ host: HOST, port: PORT }, () => {
 
                     //Save Delta, split number and BPT for gold, then give signals to lamp.
                     var info = await sendCommand('getdelta');
-                    info = removeZeroes(info);
+                    info = removeZeroes(info);          //This transforms info to a more usable format, in the pipe-timeline.
                     splitIndex = await sendCommand('getsplitindex');
                     currentBPT = await sendCommand('getbestpossibletime');
                     currentBPT = removeZeroes(currentBPT);
                     livesplitSignaler(paceChecker(info, prevTime));
 
-                    //Save time for new comparison
+                    //Save time for new comparison and ends loop
                     prevTime = info;
                     console.log('---------------------------------------------------------');
                 } else {
@@ -116,7 +120,6 @@ function sendPost(input, segment) {
                     writeText(eyesJSON, input);
                     break;
                 default:
-
                     break;
             }
         }
@@ -186,7 +189,7 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
     if (user === "Riekelt") {
         if (message === "party mode") {
             sendPost(colors.partyMode, 'none');
-            setTimeout(function() {
+            setTimeout(function () {
                 sendPost(lastBodyColor, 'body');
                 sendPost(lastEyesColor, 'eyes');
             }, 5000);
@@ -194,7 +197,7 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
             sendPost(colors.redBody, 'body');
             sendPost(colors.redEyes, 'eyes');
         }
-    } else {}
+    } else { }
 }
 
 // //New sub enables party mode for 10 secs, then reverts
@@ -202,7 +205,7 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
 ComfyJS.onSub = (user, message, subTierInfo, extra) => {
     console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
     sendPost(colors.partyMode, 'none');
-    setTimeout(function() {
+    setTimeout(function () {
         sendPost(lastBodyColor, 'body');
         sendPost(lastEyesColor, 'eyes');
 
@@ -212,7 +215,7 @@ ComfyJS.onSub = (user, message, subTierInfo, extra) => {
 // //Raids enable party mode for 10 seconds, then reverts
 ComfyJS.onRaid = (user, viewers, extra) => {
     sendPost(colors.partyMode, 'none');
-    setTimeout(function() {
+    setTimeout(function () {
         sendPost(lastBodyColor, 'body');
         sendPost(lastEyesColor, 'eyes');
     }, 10000);
@@ -273,28 +276,28 @@ function paceChecker(currentTime, prevTime) {
     if ((currentTime !== undefined) || (prevTime !== undefined)) {
         //If went from - to +, this 100% means I lost time
         if ((plusMinusCurrent == '+') && (plusMinusPrev == "-")) {
-            console.info("I DID A 1 red (ez)");	//Cannot trigger this weirdly4444.0.
+            console.info("I DID A 1 red (behind NOW)");
             return "red";
         } else if ((plusMinusCurrent == '-') && (plusMinusPrev == "-")) {
             //If I stayed on - on both times, I can easily subtract current from prev. If positive, I gained time
             //Likewise, if negative, it means I lost time. 
             if (currentSeconds - prevSeconds > 0) {
-                console.info("I DID A 2 green");
+                console.info("I DID A 2 green (behind, gained time)");
                 return "green";
             } else {
-                console.info("I DID A 3 red");
+                console.info("I DID A 3 red (behind, lost time)");
                 return "red";
             }
             //Opposite logic from up here.
         } else if ((plusMinusCurrent == '-') && (plusMinusPrev == "+")) {
-            console.info("I DID A 4 green (ez)");
+            console.info("I DID A 4 green (ahead NOW)"); //Got ahead again
             return "green";
         } else if ((plusMinusCurrent == '+') && (plusMinusPrev == "+")) {
             if (currentSeconds - prevSeconds > 0) {
-                console.info("I DID A 5 red");
+                console.info("I DID A 5 red (ahead, lost time)"); // Lost time
                 return "red";
             } else {
-                console.info("I DID A 6 green");
+                console.info("I DID A 6 green (ahead, gained time)"); //gained time
                 return "green";
             }
         }
@@ -306,7 +309,7 @@ function paceChecker(currentTime, prevTime) {
 
 //This function accepts a time format "+2:22:22.22" or "-11:11.11" and returns this in seconds (float) (671.11)
 function timeParser(time) {
-    //Only works if string has a + or -. Makes things easier
+    //Only works if string has a + or -. Makes things easier //Why again?
     if ((time.includes('+')) || (time.includes('-'))) {
         var seconds = parseFloat('0.0');
         //Get rid of plus or minus for calcs
@@ -331,7 +334,7 @@ function timeParser(time) {
     }
 }
 
-//Returns if it's a + or - at the start of a string. Input is "+2:22:22.22"
+//Returns if it's a + or - at the start of a string. Input is "+2:22:22.22" but honestly it grabs anything that has + pr - at char0
 function getPlusMinus(time) {
     if ((time.includes('-')) || (time.includes('+'))) {
         const plusminus = time.charAt(0);
@@ -355,6 +358,7 @@ function isGold() {
 }
 let pendingResolver = null;
 
+// This command requests data from Livesplit TCP server. https://github.com/LiveSplit/LiveSplit
 function sendCommand(cmd) {
     return new Promise((resolve, reject) => {
         if (pendingResolver) {
@@ -365,10 +369,9 @@ function sendCommand(cmd) {
     });
 }
 
-
+//This receives data, keep this on to only have 1 "collector".
 client.on('data', (data) => {
     const response = data.toString().trim();
-
     if (pendingResolver) {
         pendingResolver(response);
         pendingResolver = null;
@@ -377,19 +380,21 @@ client.on('data', (data) => {
     }
 });
 
+//Because the TCP server gives different times than the pipeserver, massaging it down.
+//Looks all super convoluted, but beats rewriting logic
+//If you ask "why", that's the reason.
 function removeZeroes(data) {
     //Get rid of all the zeroes first
     for (var i = 0; i < 2; i++) {
         data = data.replace("00:", "");
     }
-    //If we're not behind, we're ahead. Adds a plus at this stage.
-    //Previous logic worked this way, so it's safer to preserve that than to rewrite everything.
+    //If we're not behind, we're ahead. Adds a plus at this stage, since Livesplit doesn't add this anymore
     if ((data.charAt(0) !== "-") || (data.charAt(0) == "+")) {
         data = "+" + data;
     }
-    //We don't need that many numbers behind the comma
+    //We don't need that many numbers behind the comma, gets rid of 6 numbers at the end.
     data = data.substr(0, data.length - 5);
-    //If the first number is a 0, please remove
+    //If the first number is a 0, please remove. Unsure if actually necessary
     if (data.charAt(1) == "0") {
         data = data.slice(0, 1) + data.slice(2);
     }
