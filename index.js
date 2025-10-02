@@ -210,13 +210,13 @@ ComfyJS.onSub = (user, message, subTierInfo, extra) => {
 }
 
 // //Raids enable party mode for 10 seconds, then reverts
-// ComfyJS.onRaid = (user, viewers, extra) => {
-//     sendPost(colors.partyMode, 'none');
-//     setTimeout(function() {
-//         sendPost(lastBodyColor, 'body');
-//         sendPost(lastEyesColor, 'eyes');
-//     }, 10000);
-// }
+ComfyJS.onRaid = (user, viewers, extra) => {
+    sendPost(colors.partyMode, 'none');
+    setTimeout(function() {
+        sendPost(lastBodyColor, 'body');
+        sendPost(lastEyesColor, 'eyes');
+    }, 10000);
+}
 
 //This function gets the colour the squid needs to be, and sends this as an API request.
 function livesplitSignaler(signal) {
