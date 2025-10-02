@@ -127,6 +127,7 @@ function sendPost(input, segment) {
 }
 
 //Function for the rewards.
+//List of Comfy rewards: https://github.com/instafluff/ComfyJS
 ComfyJS.onReward = (user, reward, cost, message, extra) => { //https://github.com/instafluff/ComfyJS?tab=readme-ov-file
     if (reward === "Squid eyes color") {
         switch (message) {
