@@ -64,15 +64,17 @@ const client = net.createConnection({ host: HOST, port: PORT }, () => {
                 //See if timer is running. If so do stuff.
                 if (currentTimerPhase == "Running") {
                     // Display split name and delta
-                    const delta = await sendCommand('getdelta');
+                    var delta = await sendCommand('getdelta');
                     console.info(`Split Name: ${currentSplitName}, Delta: ${delta}`);
                     // Update previous split name
                     previousSplitName = currentSplitName;
 
                     //Save Delta, split number and BPT for gold, then give signals to lamp.
-                    const info = await sendCommand('getdelta');
+                    var info = await sendCommand('getdelta');
+                    info = removeZeroes(info);
                     splitIndex = await sendCommand('getsplitindex');
                     currentBPT = await sendCommand('getbestpossibletime');
+                    currentBPT = removeZeroes(currentBPT);
                     livesplitSignaler(paceChecker(info, prevTime));
 
                     //Save time for new comparison
@@ -224,6 +226,7 @@ function livesplitSignaler(signal) {
         //Unsure why this check is here.
         if (splitIndex > 0) {
             sendPost(colors.liveGold, "none")
+            console.log("SENT GOLD")
         }
     } else {
         if (signal == "red") {
@@ -264,18 +267,15 @@ function paceChecker(currentTime, prevTime) {
     //Saves the +/- if I'm behind or not. Needed for comparison.
     const plusMinusCurrent = getPlusMinus(currentTime);
     const plusMinusPrev = getPlusMinus(prevTime);
-    console.log("typeof " + typeof currentSeconds);
-    console.log('DINGES ' + currentTime);
 
     //The next part compares the 2 times and judges whether I lost or gained time and returns green or red.
     //Only works if both aren't undefined. Doesn't work for the first split, need to look into that.
     if ((currentTime !== undefined) || (prevTime !== undefined)) {
-        console.log("curr = " + currentTime + "& prev =  " + prevTime)
         //If went from - to +, this 100% means I lost time
-        if ((plusMinusCurrent == '+') && (plusMinusPrev == "−")) {
-            console.info("I DID A 1 red (ez)");
+        if ((plusMinusCurrent == '+') && (plusMinusPrev == "-")) {
+            console.info("I DID A 1 red (ez)");	//Cannot trigger this weirdly4444.0.
             return "red";
-        } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "−")) {
+        } else if ((plusMinusCurrent == '-') && (plusMinusPrev == "-")) {
             //If I stayed on - on both times, I can easily subtract current from prev. If positive, I gained time
             //Likewise, if negative, it means I lost time. 
             if (currentSeconds - prevSeconds > 0) {
@@ -286,7 +286,7 @@ function paceChecker(currentTime, prevTime) {
                 return "red";
             }
             //Opposite logic from up here.
-        } else if ((plusMinusCurrent == '−') && (plusMinusPrev == "+")) {
+        } else if ((plusMinusCurrent == '-') && (plusMinusPrev == "+")) {
             console.info("I DID A 4 green (ez)");
             return "green";
         } else if ((plusMinusCurrent == '+') && (plusMinusPrev == "+")) {
@@ -307,7 +307,7 @@ function paceChecker(currentTime, prevTime) {
 //This function accepts a time format "+2:22:22.22" or "-11:11.11" and returns this in seconds (float) (671.11)
 function timeParser(time) {
     //Only works if string has a + or -. Makes things easier
-    if ((time.includes('+')) || (time.includes('−'))) {
+    if ((time.includes('+')) || (time.includes('-'))) {
         var seconds = parseFloat('0.0');
         //Get rid of plus or minus for calcs
         time = time.substring(1)
@@ -333,9 +333,11 @@ function timeParser(time) {
 
 //Returns if it's a + or - at the start of a string. Input is "+2:22:22.22"
 function getPlusMinus(time) {
-    if ((time.includes('−')) || (time.includes('+'))) {
+    if ((time.includes('-')) || (time.includes('+'))) {
         const plusminus = time.charAt(0);
         return plusminus
+    } else {
+        console.log("INVALID PLUSMINUS")
     }
 }
 
@@ -374,3 +376,22 @@ client.on('data', (data) => {
         console.log('Server says (unsolicited):', response);
     }
 });
+
+function removeZeroes(data) {
+    //Get rid of all the zeroes first
+    for (var i = 0; i < 2; i++) {
+        data = data.replace("00:", "");
+    }
+    //If we're not behind, we're ahead. Adds a plus at this stage.
+    //Previous logic worked this way, so it's safer to preserve that than to rewrite everything.
+    if ((data.charAt(0) !== "-") || (data.charAt(0) == "+")) {
+        data = "+" + data;
+    }
+    //We don't need that many numbers behind the comma
+    data = data.substr(0, data.length - 5);
+    //If the first number is a 0, please remove
+    if (data.charAt(1) == "0") {
+        data = data.slice(0, 1) + data.slice(2);
+    }
+    return data;
+}
