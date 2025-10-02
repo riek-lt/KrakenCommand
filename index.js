@@ -7,8 +7,8 @@ const fs = require('fs');
 require('dotenv').config();
 
 //Integration of comfyjs is wonky and manual. See ComfyJS and limiter-async in node_modules
-// var ComfyJS = require("comfy.js");
-// ComfyJS.Init('riekelt', process.env.OAUTH);
+var ComfyJS = require("comfy.js");
+ComfyJS.Init('riekelt', process.env.OAUTH);
 
 var colorChoice;
 var prevTime = "-0.00";
@@ -124,90 +124,90 @@ function sendPost(input, segment) {
 }
 
 //Function for the rewards.
-// ComfyJS.onReward = (user, reward, cost, message, extra) => { //https://github.com/instafluff/ComfyJS?tab=readme-ov-file
-//     if (reward === "Squid eyes color") {
-//         switch (message) {
-//             case "white":
-//                 colorChoice = colors.whiteEyes;
-//                 break;
-//             case "green":
-//                 colorChoice = colors.greenEyes;
-//                 break;
-//             case "off":
-//                 colorChoice = colors.blackEyes;
-//                 break;
-//             case "red":
-//                 colorChoice = colors.redEyes;
-//                 break;
-//             case "magenta":
-//                 colorChoice = colors.magentaEyes;
-//                 break;
-//         }
-//         sendPost(colorChoice, 'eyes');
-//         lastEyesColor = colorChoice;
-//     }
-//     if (reward === "Squid color") {
-//         switch (message) {
-//             case "red":
-//                 colorChoice = colors.redBody;
-//                 break;
-//             case "blue":
-//                 colorChoice = colors.blueBody;
-//                 break;
-//             case "green":
-//                 colorChoice = colors.greenBody;
-//                 break;
-//             case "white":
-//                 colorChoice = colors.whiteBody;
-//                 break;
-//             case "yellow":
-//                 colorChoice = colors.yellowBody;
-//                 break;
-//             case "orange":
-//                 colorChoice = colors.orangeBody;
-//                 break;
-//             case "magenta":
-//                 colorChoice = colors.magentaBody;
-//                 break;
-//             case "off":
-//                 colorChoice = colors.blackBody;
-//                 break;
-//             case "cyan":
-//                 colorChoice = colors.cyanBody;
-//                 break;
-//         }
-//         sendPost(colorChoice, 'body');
-//         lastBodyColor = colorChoice;
-//     }
-// }
+ComfyJS.onReward = (user, reward, cost, message, extra) => { //https://github.com/instafluff/ComfyJS?tab=readme-ov-file
+    if (reward === "Squid eyes color") {
+        switch (message) {
+            case "white":
+                colorChoice = colors.whiteEyes;
+                break;
+            case "green":
+                colorChoice = colors.greenEyes;
+                break;
+            case "off":
+                colorChoice = colors.blackEyes;
+                break;
+            case "red":
+                colorChoice = colors.redEyes;
+                break;
+            case "magenta":
+                colorChoice = colors.magentaEyes;
+                break;
+        }
+        sendPost(colorChoice, 'eyes');
+        lastEyesColor = colorChoice;
+    }
+    if (reward === "Squid color") {
+        switch (message) {
+            case "red":
+                colorChoice = colors.redBody;
+                break;
+            case "blue":
+                colorChoice = colors.blueBody;
+                break;
+            case "green":
+                colorChoice = colors.greenBody;
+                break;
+            case "white":
+                colorChoice = colors.whiteBody;
+                break;
+            case "yellow":
+                colorChoice = colors.yellowBody;
+                break;
+            case "orange":
+                colorChoice = colors.orangeBody;
+                break;
+            case "magenta":
+                colorChoice = colors.magentaBody;
+                break;
+            case "off":
+                colorChoice = colors.blackBody;
+                break;
+            case "cyan":
+                colorChoice = colors.cyanBody;
+                break;
+        }
+        sendPost(colorChoice, 'body');
+        lastBodyColor = colorChoice;
+    }
+}
 
 // //currently only used for testing to not be reliant on rewards.
-// ComfyJS.onChat = (user, message, flags, self, extra) => {
-//     if (user === "Riekelt") {
-//         if (message === "party mode") {
-//             sendPost(colors.partyMode, 'none');
-//             setTimeout(function() {
-//                 sendPost(lastBodyColor, 'body');
-//                 sendPost(lastEyesColor, 'eyes');
-//             }, 5000);
-//         } else if (message === "full red") {
-//             sendPost(colors.redBody, 'body');
-//             sendPost(colors.redEyes, 'eyes');
-//         }
-//     } else {}
-// }
+ComfyJS.onChat = (user, message, flags, self, extra) => {
+    if (user === "Riekelt") {
+        if (message === "party mode") {
+            sendPost(colors.partyMode, 'none');
+            setTimeout(function() {
+                sendPost(lastBodyColor, 'body');
+                sendPost(lastEyesColor, 'eyes');
+            }, 5000);
+        } else if (message === "full red") {
+            sendPost(colors.redBody, 'body');
+            sendPost(colors.redEyes, 'eyes');
+        }
+    } else {}
+}
 
 // //New sub enables party mode for 10 secs, then reverts
 // //"none" means I'm not saving to eyes/body. Could be any word like banana
-// ComfyJS.onSub = (user, message, subTierInfo, extra) => {
-//     console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
-//     sendPost(colors.partyMode, 'none');
-//     setTimeout(function() {
-//         sendPost(lastBodyColor, 'body');
-//         sendPost(lastEyesColor, 'eyes');
+ComfyJS.onSub = (user, message, subTierInfo, extra) => {
+    console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
+    sendPost(colors.partyMode, 'none');
+    setTimeout(function() {
+        sendPost(lastBodyColor, 'body');
+        sendPost(lastEyesColor, 'eyes');
 
-//     }, 10000);
-// }
+    }, 10000);
+}
 
 // //Raids enable party mode for 10 seconds, then reverts
 // ComfyJS.onRaid = (user, viewers, extra) => {
