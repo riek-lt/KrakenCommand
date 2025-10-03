@@ -197,6 +197,12 @@ ComfyJS.onChat = (user, message, flags, self, extra) => {
         } else if (message === "full red") {
             sendPost(colors.redBody, 'body');
             sendPost(colors.redEyes, 'eyes');
+        } else if (message === "icy mode") {
+            sendPost(colors.icyroll, 'none');
+            setTimeout(function () {
+                sendPost(lastBodyColor, 'body');
+                sendPost(lastEyesColor, 'eyes');
+            }, 5000);
         }
     } else { }
 }
