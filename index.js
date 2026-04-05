@@ -10,7 +10,6 @@ require('dotenv').config();
 
 //Integration of comfyjs is wonky and manual. See ComfyJS and limiter-async in node_modules
 var ComfyJS = require("comfy.js");
-ComfyJS.Init('riekelt', process.env.OAUTH);
 
 var colorChoice;
 var prevTime = "-0.00";
@@ -27,6 +26,7 @@ var lastEyesColor = readData(eyesJSON);
 //Livesplit TCP server
 const HOST = '127.0.0.1'; // or the server IP
 const PORT = 16834;
+
 
 
 const client = net.createConnection({ host: HOST, port: PORT }, () => {
@@ -126,107 +126,121 @@ function sendPost(input, segment) {
     });
 }
 
-//Function for the rewards.
-//List of Comfy rewards: https://github.com/instafluff/ComfyJS
-ComfyJS.onReward = (user, reward, cost, message, extra) => { //https://github.com/instafluff/ComfyJS?tab=readme-ov-file
-    if (reward === "Squid eyes color") {
-        switch (message) {
-            case "white":
-                colorChoice = colors.whiteEyes;
-                break;
-            case "green":
-                colorChoice = colors.greenEyes;
-                break;
-            case "off":
-                colorChoice = colors.blackEyes;
-                break;
-            case "red":
-                colorChoice = colors.redEyes;
-                break;
-            case "magenta":
-                colorChoice = colors.magentaEyes;
-                break;
-        }
-        sendPost(colorChoice, 'eyes');
-        lastEyesColor = colorChoice;
-    }
-    if (reward === "Squid color") {
-        switch (message) {
-            case "red":
-                colorChoice = colors.redBody;
-                break;
-            case "blue":
-                colorChoice = colors.blueBody;
-                break;
-            case "green":
-                colorChoice = colors.greenBody;
-                break;
-            case "white":
-                colorChoice = colors.whiteBody;
-                break;
-            case "yellow":
-                colorChoice = colors.yellowBody;
-                break;
-            case "orange":
-                colorChoice = colors.orangeBody;
-                break;
-            case "magenta":
-                colorChoice = colors.magentaBody;
-                break;
-            case "off":
-                colorChoice = colors.blackBody;
-                break;
-            case "cyan":
-                colorChoice = colors.cyanBody;
-                break;
-        }
-        sendPost(colorChoice, 'body');
-        lastBodyColor = colorChoice;
-    }
-}
 
-// //currently only used for testing to not be reliant on rewards.
-ComfyJS.onChat = (user, message, flags, self, extra) => {
-    if (user === "Riekelt") {
-        if (message === "party mode") {
+async function startBot() {
+    try {
+        const validatedToken = await getValidToken();
+        //Function for the rewards.
+        //List of Comfy rewards: https://github.com/instafluff/ComfyJS
+        ComfyJS.onReward = (user, reward, cost, message, extra) => { //https://github.com/instafluff/ComfyJS?tab=readme-ov-file
+            if (reward === "Squid eyes color") {
+                switch (message) {
+                    case "white":
+                        colorChoice = colors.whiteEyes;
+                        break;
+                    case "green":
+                        colorChoice = colors.greenEyes;
+                        break;
+                    case "off":
+                        colorChoice = colors.blackEyes;
+                        break;
+                    case "red":
+                        colorChoice = colors.redEyes;
+                        break;
+                    case "magenta":
+                        colorChoice = colors.magentaEyes;
+                        break;
+                }
+                sendPost(colorChoice, 'eyes');
+                lastEyesColor = colorChoice;
+            }
+            if (reward === "Squid color") {
+                switch (message) {
+                    case "red":
+                        colorChoice = colors.redBody;
+                        break;
+                    case "blue":
+                        colorChoice = colors.blueBody;
+                        break;
+                    case "green":
+                        colorChoice = colors.greenBody;
+                        break;
+                    case "white":
+                        colorChoice = colors.whiteBody;
+                        break;
+                    case "yellow":
+                        colorChoice = colors.yellowBody;
+                        break;
+                    case "orange":
+                        colorChoice = colors.orangeBody;
+                        break;
+                    case "magenta":
+                        colorChoice = colors.magentaBody;
+                        break;
+                    case "off":
+                        colorChoice = colors.blackBody;
+                        break;
+                    case "cyan":
+                        colorChoice = colors.cyanBody;
+                        break;
+                }
+                sendPost(colorChoice, 'body');
+                lastBodyColor = colorChoice;
+            }
+        }
+
+        // //currently only used for testing to not be reliant on rewards.
+        ComfyJS.onChat = (user, message, flags, self, extra) => {
+            if (user === "Riekelt") {
+                if (message === "party mode") {
+                    sendPost(colors.partyMode, 'none');
+                    setTimeout(function () {
+                        sendPost(lastBodyColor, 'body');
+                        sendPost(lastEyesColor, 'eyes');
+                    }, 5000);
+                } else if (message === "full red") {
+                    sendPost(colors.redBody, 'body');
+                    sendPost(colors.redEyes, 'eyes');
+                } else if (message === "icy mode") {
+                    sendPost(colors.icyroll, 'none');
+                    setTimeout(function () {
+                        sendPost(lastBodyColor, 'body');
+                        sendPost(lastEyesColor, 'eyes');
+                    }, 5000);
+                }
+            } else { }
+        }
+
+        // //New sub enables party mode for 10 secs, then reverts
+        // //"none" means I'm not saving to eyes/body. Could be any word like banana
+        ComfyJS.onSub = (user, message, subTierInfo, extra) => {
+            console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
+            sendPost(colFors.partyMode, 'none');
+            setTimeout(function () {
+                sendPost(lastBodyColor, 'body');
+                sendPost(lastEyesColor, 'eyes');
+
+            }, 10000);
+        }
+
+        // //Raids enable party mode for 10 seconds, then reverts
+        ComfyJS.onRaid = (user, viewers, extra) => {
             sendPost(colors.partyMode, 'none');
             setTimeout(function () {
                 sendPost(lastBodyColor, 'body');
                 sendPost(lastEyesColor, 'eyes');
-            }, 5000);
-        } else if (message === "full red") {
-            sendPost(colors.redBody, 'body');
-            sendPost(colors.redEyes, 'eyes');
-        } else if (message === "icy mode") {
-            sendPost(colors.icyroll, 'none');
-            setTimeout(function () {
-                sendPost(lastBodyColor, 'body');
-                sendPost(lastEyesColor, 'eyes');
-            }, 5000);
+            }, 10000);
         }
-    } else { }
-}
 
-// //New sub enables party mode for 10 secs, then reverts
-// //"none" means I'm not saving to eyes/body. Could be any word like banana
-ComfyJS.onSub = (user, message, subTierInfo, extra) => {
-    console.log(user + ' subbed for months ' + subTierInfo + ' + ' + extra);
-    sendPost(colors.partyMode, 'none');
-    setTimeout(function () {
-        sendPost(lastBodyColor, 'body');
-        sendPost(lastEyesColor, 'eyes');
+        // Initialize with the fresh token
+        ComfyJS.Init('riekelt', validatedToken);
+        console.log("ComfyJS initialized successfully!");
 
-    }, 10000);
+    } catch (err) {
+        console.error("Failed to start bot:", err.message);
+    }
 }
-
-// //Raids enable party mode for 10 seconds, then reverts
-ComfyJS.onRaid = (user, viewers, extra) => {
-    sendPost(colors.partyMode, 'none');
-    setTimeout(function () {
-        sendPost(lastBodyColor, 'body');
-        sendPost(lastEyesColor, 'eyes');
-    }, 10000);
-}
+startBot();
 
 //This function gets the colour the squid needs to be, and sends this as an API request.
 function livesplitSignaler(signal) {
@@ -406,4 +420,47 @@ function removeZeroes(data) {
         data = data.slice(0, 1) + data.slice(2);
     }
     return data;
+}
+
+async function getValidToken() {
+    let currentAccess = process.env.ACCESS_TOKEN;
+    let currentRefresh = process.env.REFRESH_TOKEN;
+
+    // Check if we have a newer token saved in our local JSON
+    if (fs.existsSync('./tokens.json')) {
+        const saved = JSON.parse(fs.readFileSync('./tokens.json', 'utf8'));
+        currentAccess = saved.access_token;
+        currentRefresh = saved.refresh_token;
+    }
+
+    // Validate the token with Twitch
+    const validationReq = await fetch('https://id.twitch.tv/oauth2/validate', {
+        headers: { 'Authorization': `OAuth ${currentAccess.replace('oauth:', '')}` }
+    });
+
+    if (validationReq.ok) {
+        return currentAccess.startsWith('oauth:') ? currentAccess : `oauth:${currentAccess}`;
+    }
+
+    // If invalid, Refresh!
+    console.log("Token expired. Refreshing...");
+    const refreshReq = await fetch('https://id.twitch.tv/oauth2/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+            grant_type: 'refresh_token',
+            refresh_token: currentRefresh,
+            client_id: process.env.CLIENTID,
+            client_secret: process.env.CLIENTSECRET
+        })
+    });
+
+    const data = await refreshReq.json();
+    if (!refreshReq.ok) throw new Error("Refresh failed. Manual re-auth required.");
+
+    // Save the new pair
+    const newTokens = { access_token: data.access_token, refresh_token: data.refresh_token };
+    fs.writeFileSync('./tokens.json', JSON.stringify(newTokens, null, 2));
+
+    return `oauth:${data.access_token}`;
 }
